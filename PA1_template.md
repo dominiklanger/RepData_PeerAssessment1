@@ -132,3 +132,33 @@ median(data5$totalDailySteps)
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+```r
+data6 <- data
+
+data6$weekday <- as.POSIXlt(data$date)$wday
+data6$dayType <- factor("weekday", c("weekday", "weekend"), labels = c("weekday", "weekend"))
+data6$dayType[data6$weekday %in% c(0, 6)] <- factor("weekend", c("weekday", "weekend"), labels = c("weekday", "weekend"))
+
+data7 <- filter(data6, !is.na(steps), dayType == "weekday") %>%
+      group_by(interval) %>%
+      summarize(meanSteps = mean(steps))
+
+ggplot(data7, aes(x = interval, y = meanSteps)) + 
+      geom_bar(stat="identity")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+
+```r
+data8 <- filter(data6, !is.na(steps), dayType == "weekend") %>%
+      group_by(interval) %>%
+      summarize(meanSteps = mean(steps)) %>%
+      rbind(data7)
+
+ggplot(data8, aes(x = interval, y = meanSteps)) + 
+      geom_bar(stat="identity")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-2.png) 

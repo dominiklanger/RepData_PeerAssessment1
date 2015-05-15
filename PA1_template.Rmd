@@ -73,6 +73,17 @@ median(data5$totalDailySteps)
 
 ```{r}
 data6 <- data
-data6$weekday <- weekdays(data$data)
+
+data6$weekday <- as.POSIXlt(data$date)$wday
+data6$dayType <- factor("weekday", c("weekday", "weekend"), labels = c("weekday", "weekend"))
+data6$dayType[data6$weekday %in% c(0, 6)] <- factor("weekend", c("weekday", "weekend"), labels = c("weekday", "weekend"))
+
+data7 <- filter(data6, !is.na(steps)) %>%
+      group_by(interval, dayType) %>%
+      summarize(meanSteps = mean(steps))
+
+ggplot(data7, aes(x = interval, y = meanSteps)) + 
+      geom_bar(stat="identity") +
+      facet_grid(dayType ~ .)
 
 ```
