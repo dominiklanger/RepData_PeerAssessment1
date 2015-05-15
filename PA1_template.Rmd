@@ -8,7 +8,7 @@ output:
 ## Loading and preprocessing the data
 
 
-```{r}
+```{r preparingData, message=FALSE}
 library(dplyr)
 library(ggplot2)
 
@@ -24,7 +24,7 @@ data$date <- as.Date(data$date, format = "%Y-%m-%d") # Type-cast dates to data t
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+```{r stepsPerDay}
 data2 <- filter(data, !is.na(steps)) %>%
       group_by(date) %>%
       summarize(totalDailySteps = sum(steps))
@@ -38,20 +38,20 @@ median(data2$totalDailySteps)
 
 ## What is the average daily activity pattern?
 
-```{r}
+```{r activityPattern}
 data3 <- filter(data, !is.na(steps)) %>%
       group_by(interval) %>%
       summarize(meanSteps = mean(steps))
 
 ggplot(data3, aes(x = interval, y = meanSteps)) + 
-      geom_bar(stat="identity")
+      geom_line()
 
 data3$interval[which(data3$meanSteps == max(data3$meanSteps))]
 ```
 
 ## Imputing missing values
 
-```{r}
+```{r imputMissingValues}
 count(filter(data, is.na(steps)))
 
 naIndices = which(is.na(data$steps))
@@ -71,8 +71,8 @@ median(data5$totalDailySteps)
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
-data6 <- data
+```{r weekdayVsWeekend}
+data6 <- data4
 
 data6$weekday <- as.POSIXlt(data$date)$wday
 data6$dayType <- factor("weekday", c("weekday", "weekend"), labels = c("weekday", "weekend"))
@@ -83,7 +83,7 @@ data7 <- filter(data6, !is.na(steps)) %>%
       summarize(meanSteps = mean(steps))
 
 ggplot(data7, aes(x = interval, y = meanSteps)) + 
-      geom_bar(stat="identity") +
+      geom_line() +
       facet_grid(dayType ~ .)
 
 ```

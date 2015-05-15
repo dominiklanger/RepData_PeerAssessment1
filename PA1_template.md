@@ -6,22 +6,6 @@
 
 ```r
 library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following object is masked from 'package:stats':
-## 
-##     filter
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(ggplot2)
 
 # setwd("C:/Users/dlanger/Documents/GitHub/RepData_PeerAssessment1")
@@ -46,7 +30,7 @@ ggplot(data2, aes(x = totalDailySteps)) +
       geom_histogram(binwidth=1000, fill = "cornsilk", colour = "black")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+![](PA1_template_files/figure-html/stepsPerDay-1.png) 
 
 ```r
 mean(data2$totalDailySteps)
@@ -73,10 +57,10 @@ data3 <- filter(data, !is.na(steps)) %>%
       summarize(meanSteps = mean(steps))
 
 ggplot(data3, aes(x = interval, y = meanSteps)) + 
-      geom_bar(stat="identity")
+      geom_line()
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/activityPattern-1.png) 
 
 ```r
 data3$interval[which(data3$meanSteps == max(data3$meanSteps))]
@@ -113,7 +97,7 @@ ggplot(data5, aes(x = totalDailySteps)) +
       geom_histogram(binwidth=1000, fill = "cornsilk", colour = "black")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![](PA1_template_files/figure-html/imputMissingValues-1.png) 
 
 ```r
 mean(data5$totalDailySteps)
@@ -135,30 +119,19 @@ median(data5$totalDailySteps)
 
 
 ```r
-data6 <- data
+data6 <- data4
 
 data6$weekday <- as.POSIXlt(data$date)$wday
 data6$dayType <- factor("weekday", c("weekday", "weekend"), labels = c("weekday", "weekend"))
 data6$dayType[data6$weekday %in% c(0, 6)] <- factor("weekend", c("weekday", "weekend"), labels = c("weekday", "weekend"))
 
-data7 <- filter(data6, !is.na(steps), dayType == "weekday") %>%
-      group_by(interval) %>%
+data7 <- filter(data6, !is.na(steps)) %>%
+      group_by(interval, dayType) %>%
       summarize(meanSteps = mean(steps))
 
 ggplot(data7, aes(x = interval, y = meanSteps)) + 
-      geom_bar(stat="identity")
+      geom_line() +
+      facet_grid(dayType ~ .)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
-
-```r
-data8 <- filter(data6, !is.na(steps), dayType == "weekend") %>%
-      group_by(interval) %>%
-      summarize(meanSteps = mean(steps)) %>%
-      rbind(data7)
-
-ggplot(data8, aes(x = interval, y = meanSteps)) + 
-      geom_bar(stat="identity")
-```
-
-![](PA1_template_files/figure-html/unnamed-chunk-5-2.png) 
+![](PA1_template_files/figure-html/weekdayVsWeekend-1.png) 
