@@ -41,10 +41,10 @@ ggplot(data2, aes(x = totalDailySteps)) +
 
 Next, we calculate **mean and median of the total number of steps**:
 ```{r stepsPerDayAverage}
-totalStepsPerDay.mean <- round(mean(data2$totalDailySteps))
-totalStepsPerDay.median <- median(data2$totalDailySteps)
+totalStepsPerDay.mean <- as.integer(round(mean(data2$totalDailySteps)))
+totalStepsPerDay.median <- as.integer(round(median(data2$totalDailySteps)))
 ```
-The mean is **`r totalStepsPerDay.mean`** and the median is **`r totalStepsPerDay.median`**.
+Rounded to the next integer, the mean is **`r totalStepsPerDay.mean`** and the median is **`r totalStepsPerDay.median`**.
 
 ## What is the average daily activity pattern?
 
@@ -94,10 +94,11 @@ ggplot(data5, aes(x = totalDailySteps)) +
 
 As for the original data, we also calculate **mean and median of the total number of steps** from the new dataset:
 ```{r stepsPerDayAverageAfterFillingUp}
-totalStepsPerDay.mean.new <- mean(data5$totalDailySteps)
-totalStepsPerDay.median.new <- median(data5$totalDailySteps)
+totalStepsPerDay.mean.new <- as.integer(round(mean(data5$totalDailySteps)))
+totalStepsPerDay.median.new <- as.integer(round(median(data5$totalDailySteps)))
 ```
-The mean is **`r totalStepsPerDay.mean.new`** and the median is **`r totalStepsPerDay.median.new`**.
+
+Rounded to the next integer, the mean is **`r totalStepsPerDay.mean.new`** and the median is **`r totalStepsPerDay.median.new`** (compared to `r totalStepsPerDay.mean` and `r totalStepsPerDay.median`, respectively, before imputing missing values).
 
 ## Are there differences in activity patterns between weekdays and weekends?
 We create a **new factor variable** in the dataset indicating whether a given date is a **weekday or weekend day**. Note that we start from the new dataset created in the previous section, in which missing values have been replaced with best estimates.
