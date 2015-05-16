@@ -82,7 +82,7 @@ numberOfMissingValues <- count(filter(data, is.na(steps)))[1, 1]
 ```
 The number of missing values is **2304**.
 
-Next, we replace each NA with the average number of steps of the corresponding interval (averaged across all days, as calculated in the previous section). 
+Next, we **replace each NA with the average number of steps of the corresponding interval** (averaged across all days, as calculated in the previous section). 
 
 ```r
 naIndices = which(is.na(data$steps))
@@ -112,7 +112,7 @@ totalStepsPerDay.median.new <- median(data5$totalDailySteps)
 The mean is **1.0766189\times 10^{4}** and the median is **1.0766189\times 10^{4}**.
 
 ## Are there differences in activity patterns between weekdays and weekends?
-We create a new factor variable in the dataset indicating whether a given date is a **weekday or weekend day**. Note that we start from the new dataset created in the previous section, in which missing values have been replaced with best estimates.
+We create a **new factor variable** in the dataset indicating whether a given date is a **weekday or weekend day**. Note that we start from the new dataset created in the previous section, in which missing values have been replaced with best estimates.
 
 ```r
 data6 <- data4
@@ -122,7 +122,7 @@ data6$dayType <- factor("weekday", c("weekday", "weekend"), labels = c("weekday"
 data6$dayType[data6$weekday %in% c(0, 6)] <- factor("weekend", c("weekday", "weekend"), labels = c("weekday", "weekend"))
 ```
 
-With the enriched dataset, we create a facetted plot comparing the time series average number of steps taken for weekdays vs. weekend days:
+With the enriched dataset, we create a **facetted time-series plot comparing the time series average number of steps taken for weekdays vs. weekend days**:
 
 ```r
 data7 <- filter(data6, !is.na(steps)) %>%
@@ -135,3 +135,9 @@ ggplot(data7, aes(x = interval, y = meanSteps)) +
 ```
 
 ![](PA1_template_files/figure-html/weekdayVsWeekendPlot-1.png) 
+
+Three **interesting observations** can be made from the comparison of the two above plots:
+
+*   On average, significant activity starts and ends somewhat later on weekends than on weekdays. This does not come as a surprise given that many people with a regular job typically get up later in the morning and might go out in the evening relatively more often on weekends than on weekdays.
+*   On average, activity is more evenly distributed over the active part of the day on weekends compared to weekdays. We might hypothesize that the test subject has a job we they are mostly sitting (e.g. an office job) and is more active on weekends, e.g. while going shopping.
+*   On average, there is a rather high peak of activity in the morning of weekdays. We might hypothesize that the test subject typically goes jogging in the morning of weekdays.
